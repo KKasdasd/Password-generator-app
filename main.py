@@ -4,18 +4,40 @@ from random import choice, randint, shuffle
 import pyperclip
 ENTRY_WIDTH = 35
 
+
+
+# -------------------- SEARCH PASSWORD -------------------- #
+
 def find_password():
-    pass
+    website = website_entry.get()
+    if len(website) == 0:
+        messagebox.showinfo(title=website, message="Website field is empty")
+        return
+    try:
+        with open("./Passwords_data.json", "r") as password_file:
+            data = json.load(password_file)
+
+    except FileNotFoundError:
+        messagebox.showerror(
+            title="Error", message="No Data File Found")
+    else:
+        if website in data:
+            email = data[website]["email"]
+            password = data[website]["password"]
+            messagebox.showinfo(
+                title=website, message=f"Email: {email}\nPassword:{password}")
+        else:
+            messagebox.showerror(title="Error",
+                                 message="Website Not Found")
 
 def generate_password():
     password_entry.delete(0, END)
     lower_letters = [chr(x) for x in range(97, 123)]
-    upper_letters = [chr(x) for x in range(65, 91)]
     numbers = [chr(x) for x in range(48, 58)]
     symbols = [chr(x) for x in range(33, 44) if not (x == 44 or x == 39)]
 
     password_letters = [choice(lower_letters) for _ in range(randint(8, 10))]
-    password_letters.append(choice(upper_letters))
+    password_letters.append(choice(lower_letters).upper())
     password_numbers = [choice(numbers) for _ in range(randint(2, 4))]
     password_symbols = [choice(symbols) for _ in range(randint(2, 4))]
 
